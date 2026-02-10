@@ -42,7 +42,7 @@ export class AudioSystem {
             const audio = new Audio();
             audio.preload = 'auto';
             // Encode filename for URL
-            audio.src = `/audio/${encodeURIComponent(filename)}`;
+            audio.src = `${import.meta.env.BASE_URL}audio/${encodeURIComponent(filename)}`;
             audio.volume = this.volume;
             
             // Debug loading

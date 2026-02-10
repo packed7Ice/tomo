@@ -1,4 +1,4 @@
-import { Building, Achievement, BuildingData, AchievementData } from './Entity';
+import { Building, Achievement } from './Entity';
 import { buildingsData } from '../data/buildings';
 import { achievementsData } from '../data/achievements';
 import { SaveSystem, GameSaveData } from './Save';
