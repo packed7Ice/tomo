@@ -7,50 +7,44 @@ export class AudioSystem {
     private fixedFilename: string | null = null;
     private volume: number = 0.5; // Default volume 50%
 
-    public readonly filenames = [
-        "d_class_2nd_year.wav",
-        "d_class_2nd_year_diff.wav",
-        "original.wav",
-        "tomo_tomo_collection4.wav",
-        "ah.wav",
-        "arigatou_gozaimashita.wav",
-        "eh.wav",
-        "otsukaresama_desu.wav",
-        "otsukaresama_desu2.wav",
-        "onegaishimasu.wav",
-        "kanishabu.wav",
-        "dewa_douzo.wav",
-        "toriaezu.wav",
-        "nandakke.wav",
-        "hai.wav",
-        "yabaissu.wav",
-        "yarimasukaa.wav",
-        "yoshi.wav",
-        "ima_watashi_wa_nani_wo.wav",
-        "nani_wo_shiteirundesuka.wav",
-        "uso_no_jouhou_wo.wav",
-        "wara.wav",
-        "rokuon_dekimashita.wav"
-    ];
+    // Load all audio files from assets using Vite's glob import
+    // eager: true -> load immediately
+    // import: 'default' -> get the URL string
+    private audioModules = import.meta.glob('../assets/audio/*.wav', { eager: true, import: 'default' }) as Record<string, string>;
+
+    public readonly filenames: string[] = [];
 
     constructor() {
         this.initPool();
     }
 
     private initPool() {
-        this.filenames.forEach(filename => {
+        // Clear existing
+        this.filenames.length = 0;
+        this.pool.clear();
+
+        for (const path in this.audioModules) {
+            // Extract filename from path (e.g., "../assets/audio/foo.wav" -> "foo.wav")
+            const filename = path.split('/').pop() || "";
+            if (!filename) continue;
+
+            this.filenames.push(filename);
+
+            const src = this.audioModules[path];
             const audio = new Audio();
             audio.preload = 'auto';
-            // Encode filename for URL
-            // Base URL (e.g., /tomo/) + audio/ + filename
-            audio.src = `${import.meta.env.BASE_URL}audio/${encodeURIComponent(filename)}`;
+            audio.src = src; // Vite has already resolved this to the correct assets URL
             audio.volume = this.volume;
             
             // Debug loading
-            audio.onerror = (e) => console.error(`Failed to load audio: ${filename} (src: ${audio.src})`, e);
+            audio.onerror = (e) => console.error(`Failed to load audio: ${filename} (src: ${src})`, e);
             
             this.pool.set(filename, audio);
-        });
+        }
+        
+        // Sort filenames for consistency
+        this.filenames.sort();
+        console.log("AudioSystem initialized with:", this.filenames);
     }
 
     public setMode(mode: 'random' | 'fixed', filename?: string) {
@@ -74,7 +68,10 @@ export class AudioSystem {
     }
 
     public play() {
-        if (this.pool.size === 0) return;
+        if (this.pool.size === 0) {
+            console.warn("No audio files loaded in pool");
+            return;
+        }
 
         let audio: HTMLAudioElement | undefined;
         let idx = -1;
@@ -116,7 +113,13 @@ export class AudioSystem {
         // Ensure volume is set (in case it was changed globally)
         audio.volume = this.volume;
 
-        audio.play().catch(e => console.warn('Audio play failed', e));
+        const playPromise = audio.play();
+        if (playPromise !== undefined) {
+             playPromise.catch(e => {
+                 console.warn('Audio play failed', e);
+                 // User interaction requirement might trigger this
+             });
+        }
 
         audio.onended = () => {
             if (this.currentAudio === audio) {
