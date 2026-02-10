@@ -59,6 +59,10 @@ export const useGame = () => {
         gameInstance.onAchievementUnlock = callback;
     }, []);
 
+    const setSaveCallback = useCallback((callback: () => void) => {
+        gameInstance.onSave = callback;
+    }, []);
+
     return {
         game: gameInstance,
         tomo: Math.floor(gameInstance.tomo), // Return integers for display
@@ -67,6 +71,7 @@ export const useGame = () => {
         click,
         buyBuilding,
         reset,
-        setAchievementCallback
+        setAchievementCallback,
+        setSaveCallback
     };
 };

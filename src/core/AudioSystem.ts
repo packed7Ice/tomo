@@ -1,51 +1,66 @@
 export class AudioSystem {
-    private audioPool: HTMLAudioElement[] = [];
+    private pool: HTMLAudioElement[] = [];
     private currentAudio: HTMLAudioElement | null = null;
-    private readonly TOTAL_AUDIO = 22;
     private lastPlayedIndex = -1;
 
     constructor() {
-        this.init();
+        this.initPool();
     }
 
-    private init() {
-        for (let i = 1; i <= this.TOTAL_AUDIO; i++) {
+    private initPool() {
+        const filenames = [
+            "D班2回生の.wav",
+            "D班2回生差分.wav",
+            "original.wav",
+            "tomo_tomo_collection4.wav",
+            "あ〜.wav",
+            "ありがとうございました.wav",
+            "えっ.wav",
+            "お疲れ様です.wav",
+            "お疲れ様です2.wav",
+            "お願いします.wav",
+            "かにしゃぶ.wav",
+            "ではどうぞ.wav",
+            "とりあえず.wav",
+            "なんだっけ.wav",
+            "はい！.wav",
+            "やばいっす.wav",
+            "やりますかぁ.wav",
+            "よし.wav",
+            "今私は何を.wav",
+            "何をしているんですか.wav",
+            "嘘の情報を.wav",
+            "笑.wav",
+            "録音できました.wav"
+        ];
+
+        filenames.forEach(filename => {
             const audio = new Audio();
             audio.preload = 'auto';
-            audio.src = `/audio/${i}.wav`;
-            this.audioPool.push(audio);
-        }
+            audio.src = `/audio/${filename}`;
+            this.pool.push(audio);
+        });
     }
 
     public playRandom() {
-        // Stop currently playing
+        if (this.pool.length <= 1) return;
+
+        let idx: number;
+        do {
+            idx = Math.floor(Math.random() * this.pool.length);
+        } while (idx === this.lastPlayedIndex);
+
+        this.lastPlayedIndex = idx;
+        const audio = this.pool[idx];
+        
+        // Stop current
         if (this.currentAudio) {
             this.currentAudio.pause();
             this.currentAudio.currentTime = 0;
         }
 
-        const idx = this.getRandomIndex();
-        const audio = this.audioPool[idx];
-        
-        if (!audio) return;
-
-        audio.currentTime = 0;
+        // Play new
         this.currentAudio = audio;
-
-        audio.play().catch(err => {
-            console.warn('Audio play failed:', err);
-        });
-
-        return idx; // Return index for potential visual sync
-    }
-
-    private getRandomIndex(): number {
-        if (this.TOTAL_AUDIO <= 1) return 0;
-        let idx;
-        do {
-            idx = Math.floor(Math.random() * this.TOTAL_AUDIO);
-        } while (idx === this.lastPlayedIndex);
-        this.lastPlayedIndex = idx;
         return idx;
     }
 }

@@ -9,7 +9,7 @@ interface ToastItem {
 }
 
 export const Toast: React.FC = () => {
-    const { setAchievementCallback } = useGame();
+    const { setAchievementCallback, setSaveCallback } = useGame();
     const [toasts, setToasts] = useState<ToastItem[]>([]);
     const [counter, setCounter] = useState(0);
 
@@ -26,6 +26,10 @@ export const Toast: React.FC = () => {
     useEffect(() => {
         setAchievementCallback((ach: Achievement) => {
             addToast(`実績解除: ${ach.data.name}`, 'achievement');
+        });
+        
+        setSaveCallback(() => {
+            addToast('データを保存しました', 'info');
         });
         
         // Initial welcome

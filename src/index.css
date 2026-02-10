@@ -1,8 +1,51 @@
-@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap');
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme {
+  --color-bg-primary: #0a0a1a;
+  --color-bg-secondary: #12122a;
+  --color-bg-panel: rgba(20, 20, 40, 0.8);
+  --color-accent-1: #6c5ce7;
+  --color-accent-2: #a29bfe;
+  --color-accent-3: #fd79a8;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.65);
+  --color-success: #00b894;
+  --color-warning: #fab1a0;
+
+  --font-main: "M PLUS Rounded 1c", sans-serif;
+
+  --animate-fade-slide-down: fadeSlideDown 0.8s ease-out;
+  --animate-fade-slide-up: fadeSlideUp 1s ease-out 0.3s both;
+  --animate-pulse-out: pulseOut 0.4s ease-out forwards;
+  --animate-rotate-glow: rotateGlow 6s linear infinite;
+  --animate-float: floatParticle 8s infinite ease-in-out;
+
+  @keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulseOut {
+    0% { transform: scale(0.9); opacity: 0.8; }
+    100% { transform: scale(1.2); opacity: 0; }
+  }
+  @keyframes rotateGlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  @keyframes floatParticle {
+    0% { opacity: 0; transform: translateY(100vh) scale(0); }
+    20% { opacity: 0.6; }
+    80% { opacity: 0.3; }
+    100% { opacity: 0; transform: translateY(-20vh) scale(1); }
+  }
+  
+  --image-radial-app: radial-gradient(ellipse at 50% 40%, #1a1a3e 0%, #0a0a1a 70%);
+  --image-glow-conic: conic-gradient(from 0deg, #6c5ce7, #fd79a8, #a29bfe, #6c5ce7);
+}
 
 @layer base {
   body {
@@ -16,20 +59,21 @@
   }
   
   .pane-scroll {
-    @apply overflow-y-auto scrollbar-thin scrollbar-track-white/5 scrollbar-thumb-white/10;
+    @apply overflow-y-auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) rgba(255, 255, 255, 0.05);
   }
-}
 
-/* Custom scrollbar utility not in standard tailwind */
-.scrollbar-thin::-webkit-scrollbar {
+  .pane-scroll::-webkit-scrollbar {
     width: 6px;
-}
-.scrollbar-track-white\/5::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.05);
-}
-.scrollbar-thumb-white\/10::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.1);
+  }
+  .pane-scroll::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .pane-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 3px;
+  }
 }
 
 /* Emoji Burst Animation (Dynamic values need css var support which tailwind has but complex animation is easier here) */

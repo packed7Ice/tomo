@@ -20,6 +20,7 @@ export class Game {
     // UI Callbacks
     public onTomoUpdate?: (tomo: number, total: number) => void;
     public onAchievementUnlock?: (achievement: Achievement) => void;
+    public onSave?: () => void;
 
     constructor() {
         this.audio = new AudioSystem();
@@ -118,6 +119,7 @@ export class Game {
         this.achievements.forEach(a => data.achievements[a.data.id] = a.unlocked);
 
         SaveSystem.save(data);
+        if (this.onSave) this.onSave();
     }
 
     public load() {
