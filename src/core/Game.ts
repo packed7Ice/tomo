@@ -32,6 +32,13 @@ export class Game {
         this.achievementListeners.delete(listener);
     }
 
+    // Statistics
+    public totalClicks: number = 0;
+    public maxTomo: number = 0;
+    public clickTomo: number = 0;
+    public buildingTomo: number = 0;
+    public playTime: number = 0;
+
     constructor() {
         this.audio = new AudioSystem();
         this.initEntities();
@@ -59,17 +66,17 @@ export class Game {
         // Production
         const production = this.getProductionPerSecond() * dt;
         if (production > 0) {
-            this.addTomo(production);
+            this.addTomo(production, 'building');
         }
 
-        // Auto Save
+        // Auto Save & Play Time
+        this.playTime += dt * 1000;
         this._accumulatedTime += dt * 1000;
         if (this._accumulatedTime >= this._autoSaveInterval) {
             this.save();
             this._accumulatedTime = 0;
         }
 
-        // Check Achievements
         // Check Achievements
         this.achievements.forEach(ach => {
             if (ach.check(this)) {
@@ -79,15 +86,23 @@ export class Game {
     }
 
     public click() {
-        this.addTomo(1);
+        this.totalClicks++;
+        this.addTomo(1, 'click');
         this.audio.play();
     }
 
-    public addTomo(amount: number) {
+    public addTomo(amount: number, source: 'click' | 'building' | 'other' = 'other') {
         this.tomo += amount;
         if (amount > 0) {
             this.totalTomo += amount;
+            if (source === 'click') this.clickTomo += amount;
+            if (source === 'building') this.buildingTomo += amount;
         }
+        
+        if (this.tomo > this.maxTomo) {
+            this.maxTomo = this.tomo;
+        }
+
         if (this.onTomoUpdate) this.onTomoUpdate(Math.floor(this.tomo), Math.floor(this.totalTomo));
     }
 
@@ -140,7 +155,13 @@ export class Game {
             buildings: {},
             achievements: {},
             startTime: this.startTime,
-            lastSaveTime: Date.now()
+            lastSaveTime: Date.now(),
+            // Stats
+            totalClicks: this.totalClicks,
+            maxTomo: this.maxTomo,
+            clickTomo: this.clickTomo,
+            buildingTomo: this.buildingTomo,
+            playTime: this.playTime
         };
 
         this.buildings.forEach(b => data.buildings[b.data.id] = b.count);
@@ -156,6 +177,13 @@ export class Game {
             this.tomo = data.tomo;
             this.totalTomo = data.totalTomo || 0; // Fallback for migration
             this.startTime = data.startTime || Date.now();
+            
+            // Load Stats with fallback
+            this.totalClicks = data.totalClicks || 0;
+            this.maxTomo = data.maxTomo || this.tomo;
+            this.clickTomo = data.clickTomo || 0;
+            this.buildingTomo = data.buildingTomo || 0;
+            this.playTime = data.playTime || 0;
             
             if (data.buildings) {
                 this.buildings.forEach(b => {

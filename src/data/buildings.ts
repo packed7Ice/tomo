@@ -16,11 +16,25 @@ export const buildingsData: BuildingData[] = [
         baseProduction: 1
     },
     {
+        id: 'influencer_school',
+        name: 'インフルエンサー塾',
+        description: '未来のスターを育てて「とも」を増やす。',
+        baseCost: 500,
+        baseProduction: 4
+    },
+    {
         id: 'fan_club',
         name: 'ファンクラブ',
         description: '熱狂的なファンたちが自発的に布教してくれる。',
         baseCost: 1100,
         baseProduction: 8
+    },
+    {
+        id: 'merch_store',
+        name: '公式グッズショップ',
+        description: '「とも」グッズを販売して知名度アップ。',
+        baseCost: 5000,
+        baseProduction: 20
     },
     {
         id: 'live_event',
@@ -37,6 +51,13 @@ export const buildingsData: BuildingData[] = [
         baseProduction: 260
     },
     {
+        id: 'theme_park',
+        name: 'ともテーマパーク',
+        description: '夢と魔法と「とも」の王国。',
+        baseCost: 500000,
+        baseProduction: 800
+    },
+    {
         id: 'world_tour',
         name: 'ワールドツアー',
         description: '世界中に「とも」の輪を広げる。',
@@ -44,11 +65,25 @@ export const buildingsData: BuildingData[] = [
         baseProduction: 1400
     },
     {
+        id: 'satellite',
+        name: 'とも衛星',
+        description: '宇宙から「とも」電波を発信し続ける。',
+        baseCost: 8000000, // 8M
+        baseProduction: 3000
+    },
+    {
         id: 'office',
         name: 'オフィス',
         description: '会社を設立して組織的に「とも」を集める。',
         baseCost: 20000000, // 20M
         baseProduction: 7500
+    },
+    {
+        id: 'moon_base',
+        name: '月面基地',
+        description: '月から地球全土に「とも」をアピール。',
+        baseCost: 100000000, // 100M
+        baseProduction: 20000
     },
     {
         id: 'factory',
@@ -79,10 +114,24 @@ export const buildingsData: BuildingData[] = [
         baseProduction: 10000000
     },
     {
+        id: 'dyson_sphere',
+        name: 'ともダイソン球',
+        description: '恒星の全エネルギーを「とも」に変換。',
+        baseCost: 10000000000000, // 10T
+        baseProduction: 55000000
+    },
+    {
         id: 'galaxy',
         name: 'ともギャラクシー',
         description: '銀河系あまねく「とも」が響き渡る。',
-        baseCost: 14000000000000, // 14T
-        baseProduction: 65000000
+        baseCost: 140000000000000, // 140T
+        baseProduction: 650000000
+    },
+    {
+        id: 'universe',
+        name: 'ともユニバース',
+        description: '全宇宙の理（ことわり）が「とも」になる。',
+        baseCost: 9990000000000000, // ~10Quadrillion
+        baseProduction: 9999999999
     }
 ];

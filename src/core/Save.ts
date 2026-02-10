@@ -7,6 +7,12 @@ export interface GameSaveData {
     achievements: { [id: string]: boolean };
     startTime: number;
     lastSaveTime: number;
+    // Statistics
+    totalClicks?: number;
+    maxTomo?: number;
+    clickTomo?: number;
+    buildingTomo?: number;
+    playTime?: number;
 }
 
 const STORAGE_KEY = 'tomo_clicker_save';

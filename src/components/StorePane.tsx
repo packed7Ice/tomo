@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { useGame } from '../hooks/useGame';
 import { BuildingItem } from './BuildingItem';
 import { AchievementItem } from './AchievementItem';
+import { StatisticsPane } from './StatisticsPane';
 
 export const StorePane: React.FC = () => {
     const { game, tomo, buyBuilding, reset, audioFilenames, setAudioMode, setVolume, volume } = useGame();
-    const [activeTab, setActiveTab] = useState<'store' | 'achievements'>('store');
+    const [activeTab, setActiveTab] = useState<'store' | 'achievements' | 'statistics'>('store');
 
     const handleReset = () => {
         if (confirm('本当にリセットしますか？')) {
@@ -38,13 +39,23 @@ export const StorePane: React.FC = () => {
                     >
                         実績
                     </button>
+                    <button
+                        onClick={() => setActiveTab('statistics')}
+                        className={`flex-1 py-3 text-sm font-bold transition-colors ${
+                            activeTab === 'statistics' 
+                            ? 'bg-accent-1/10 text-accent-1 border-b-2 border-accent-1' 
+                            : 'text-text-muted hover:text-text-primary hover:bg-white/5'
+                        }`}
+                    >
+                        統計
+                    </button>
                 </div>
 
                 {/* Controls (Reset / Audio) */}
                 <div className="p-4 flex flex-col gap-3">
                     <div className="flex justify-between items-center">
                         <h2 className="text-sm text-text-muted font-bold">
-                            {activeTab === 'store' ? 'アイテム購入' : '実績リスト'}
+                            {activeTab === 'store' ? 'アイテム購入' : activeTab === 'achievements' ? '実績リスト' : 'プレイ統計'}
                         </h2>
                         <button 
                             onClick={handleReset}
@@ -101,13 +112,15 @@ export const StorePane: React.FC = () => {
                             onBuy={() => buyBuilding(building.data.id)}
                         />
                     ))
-                ) : (
+                ) : activeTab === 'achievements' ? (
                     game.achievements.map(achievement => (
                         <AchievementItem
                             key={achievement.data.id}
                             achievement={achievement}
                         />
                     ))
+                ) : (
+                    <StatisticsPane />
                 )}
             </div>
         </div>
