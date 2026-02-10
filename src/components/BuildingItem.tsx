@@ -21,8 +21,11 @@ export const BuildingItem: React.FC<Props> = ({ building, canBuy, onBuy }) => {
         >
             <div className="flex justify-between items-center mb-1">
                 <div className="font-bold text-base">{building.data.name}</div>
-                <div className={`font-mono text-sm ${canBuy ? 'text-success' : 'text-warning'}`}>
-                    💎 {building.currentCost.toLocaleString()}
+                <div className={`font-mono text-sm flex items-center gap-1.5 ${canBuy ? 'text-success' : 'text-warning'}`}>
+                    <div className="bg-white/90 rounded p-0.5 shadow-sm">
+                        <img src="/image/image.png" alt="tomo" className="w-3.5 h-3.5 object-contain" />
+                    </div>
+                    {building.currentCost.toLocaleString()}
                 </div>
             </div>
             

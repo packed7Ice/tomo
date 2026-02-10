@@ -31,8 +31,14 @@ export const useGame = () => {
             handleUpdate();
         };
 
+        const onUnlock = () => {
+             setTick(t => t + 1);
+        };
+        gameInstance.addAchievementListener(onUnlock);
+
         return () => {
             gameInstance.onTomoUpdate = originalOnUpdate;
+            gameInstance.removeAchievementListener(onUnlock);
         };
     }, []);
 
@@ -56,11 +62,16 @@ export const useGame = () => {
     }, []);
 
     const setAchievementCallback = useCallback((callback: (ach: Achievement) => void) => {
-        gameInstance.onAchievementUnlock = callback;
+        gameInstance.addAchievementListener(callback);
+        return () => gameInstance.removeAchievementListener(callback);
     }, []);
 
     const setSaveCallback = useCallback((callback: () => void) => {
         gameInstance.onSave = callback;
+    }, []);
+
+    const setAudioMode = useCallback((mode: 'random' | 'fixed', filename?: string) => {
+        gameInstance.setAudioMode(mode, filename);
     }, []);
 
     return {
@@ -68,10 +79,20 @@ export const useGame = () => {
         tomo: Math.floor(gameInstance.tomo), // Return integers for display
         totalTomo: Math.floor(gameInstance.totalTomo),
         production: gameInstance.getProductionPerSecond(),
+        audioFilenames: gameInstance.getAudioFilenames(),
         click,
         buyBuilding,
         reset,
         setAchievementCallback,
-        setSaveCallback
+        setSaveCallback,
+        setAudioMode,
+        volume: gameInstance.getVolume(),
+        setVolume: (v: number) => {
+             gameInstance.setVolume(v);
+             // Force update ?? setTick?
+             // Volume change doesn't need immediate UI re-render unless we show slider value dragging
+             // But valid use case.
+             setTick(t => t + 1);
+        }
     };
 };

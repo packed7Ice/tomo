@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { useGame } from '../hooks/useGame';
+import { BackgroundCharacters } from './BackgroundCharacters';
 
 export const ClickerPane: React.FC = () => {
     const { tomo, production, click } = useGame();
@@ -33,24 +34,39 @@ export const ClickerPane: React.FC = () => {
     const spawnEmoji = () => {
         if (!imageWrapperRef.current) return;
         
-        const emojis = ['🔊', '🎵', '🎶', '✨', '⭐', '💫', '🎤', '🗣️', '💬'];
-        const emoji = document.createElement('span');
-        emoji.className = 'emoji-burst';
-        emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        // Create container for particle
+        const particle = document.createElement('div');
+        particle.className = 'emoji-burst flex items-center justify-center';
+        
+        // Style container (white background)
+        particle.style.width = '40px';
+        particle.style.height = '40px';
+        particle.style.background = 'rgba(255, 255, 255, 0.9)';
+        particle.style.borderRadius = '8px';
+        particle.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+        
+        // Create image
+        const img = document.createElement('img');
+        img.src = '/image/image.png';
+        img.style.width = '30px';
+        img.style.height = '30px';
+        img.style.objectFit = 'contain';
+        
+        particle.appendChild(img);
         
         const tx = (Math.random() - 0.5) * 200;
         const ty = -(Math.random() * 120 + 60);
         const rot = (Math.random() - 0.5) * 360;
         
-        emoji.style.left = '50%';
-        emoji.style.top = '50%';
+        particle.style.left = '50%';
+        particle.style.top = '50%';
         
-        emoji.style.setProperty('--tx', `${tx}px`);
-        emoji.style.setProperty('--ty', `${ty}px`);
-        emoji.style.setProperty('--rot', `${rot}deg`);
+        particle.style.setProperty('--tx', `${tx}px`);
+        particle.style.setProperty('--ty', `${ty}px`);
+        particle.style.setProperty('--rot', `${rot}deg`);
         
-        imageWrapperRef.current.appendChild(emoji);
-        emoji.addEventListener('animationend', () => emoji.remove());
+        imageWrapperRef.current.appendChild(particle);
+        particle.addEventListener('animationend', () => particle.remove());
     };
 
     const handleClick = (e: React.MouseEvent | React.KeyboardEvent) => {
@@ -92,6 +108,9 @@ export const ClickerPane: React.FC = () => {
         <div className="flex-1 relative flex flex-col justify-center items-center bg-radial-app overflow-hidden">
             <div ref={particlesRef} className="absolute inset-0 pointer-events-none z-0" />
             
+            {/* Background Characters */}
+            <BackgroundCharacters tomo={tomo} />
+            
             <div className="absolute top-8 left-0 w-full text-center z-10 pointer-events-none">
                 <div className="text-5xl font-black mb-2 drop-shadow-[0_0_20px_rgba(108,92,231,0.5)]">
                     <span className="text-text-secondary text-2xl mr-2">とも:</span>
@@ -113,8 +132,11 @@ export const ClickerPane: React.FC = () => {
                     aria-label="Click to get Tomo"
                 >
                     {/* Glow Ring */}
-                    <div className="absolute -inset-4 rounded-3xl bg-glow-conic opacity-50 blur-xl animate-rotate-glow -z-10" />
+                    <div className="absolute -inset-4 rounded-3xl bg-glow-conic opacity-50 blur-xl animate-rotate-glow -z-20" />
                     
+                    {/* White Background (Square with rounded corners) */}
+                    <div className="absolute inset-0 rounded-[40px] bg-white/90 scale-105 -z-10 shadow-[0_0_30px_rgba(255,255,255,0.4)]" />
+
                     {/* Pulse Ring */}
                     <div className="pulse-ring absolute -inset-2 rounded-[20px] border-2 border-accent-3 opacity-0 pointer-events-none" />
                     
@@ -134,6 +156,10 @@ export const ClickerPane: React.FC = () => {
                 @keyframes flashEffect {
                     0% { opacity: 0.6; }
                     100% { opacity: 0; }
+                }
+                @keyframes float {
+                    0%, 100% { transform: translateY(0) scale(var(--scale)); }
+                    50% { transform: translateY(-10px) scale(var(--scale)); }
                 }
             `}</style>
         </div>

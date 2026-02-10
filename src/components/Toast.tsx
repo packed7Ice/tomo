@@ -24,7 +24,7 @@ export const Toast: React.FC = () => {
     };
 
     useEffect(() => {
-        setAchievementCallback((ach: Achievement) => {
+        const cleanup = setAchievementCallback((ach: Achievement) => {
             addToast(`実績解除: ${ach.data.name}`, 'achievement');
         });
         
@@ -32,14 +32,10 @@ export const Toast: React.FC = () => {
             addToast('データを保存しました', 'info');
         });
         
-        // Initial welcome
-        // We can't easily check 'if game.tomo === 0' here inside effect without dep, 
-        // effectively runs once on mount.
-        setTimeout(() => {
-            // Simple check or just always show on load? Maybe annoying.
-            // Let's skip for now or make it state based in App.
-        }, 1000);
-    }, [setAchievementCallback]);
+        return () => {
+             if (cleanup) cleanup();
+        };
+    }, [setAchievementCallback, setSaveCallback]);
 
     return (
         <div className="fixed bottom-8 left-1/2 -translate-x-1/2 flex flex-col gap-2 z-50 pointer-events-none w-max">

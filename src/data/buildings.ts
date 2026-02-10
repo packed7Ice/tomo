@@ -42,5 +42,47 @@ export const buildingsData: BuildingData[] = [
         description: '世界中に「とも」の輪を広げる。',
         baseCost: 1400000,
         baseProduction: 1400
+    },
+    {
+        id: 'office',
+        name: 'オフィス',
+        description: '会社を設立して組織的に「とも」を集める。',
+        baseCost: 20000000, // 20M
+        baseProduction: 7500
+    },
+    {
+        id: 'factory',
+        name: 'とも工場',
+        description: '「とも」を大量生産する最先端工場。',
+        baseCost: 330000000, // 330M
+        baseProduction: 44000
+    },
+    {
+        id: 'city',
+        name: 'ともシティ',
+        description: '「とも」が溢れる理想郷のような都市。',
+        baseCost: 5100000000, // 5.1B
+        baseProduction: 260000
+    },
+    {
+        id: 'country',
+        name: 'とも共和国',
+        description: '国家予算レベルで「とも」を運用する。',
+        baseCost: 75000000000, // 75B
+        baseProduction: 1600000
+    },
+    {
+        id: 'planet',
+        name: 'ともプラネット',
+        description: '星ごと「とも」色に染める。',
+        baseCost: 1000000000000, // 1T
+        baseProduction: 10000000
+    },
+    {
+        id: 'galaxy',
+        name: 'ともギャラクシー',
+        description: '銀河系あまねく「とも」が響き渡る。',
+        baseCost: 14000000000000, // 14T
+        baseProduction: 65000000
     }
 ];

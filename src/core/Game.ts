@@ -19,8 +19,18 @@ export class Game {
     
     // UI Callbacks
     public onTomoUpdate?: (tomo: number, total: number) => void;
-    public onAchievementUnlock?: (achievement: Achievement) => void;
+    // public onAchievementUnlock?: (achievement: Achievement) => void; // Deprecated
     public onSave?: () => void;
+    
+    private achievementListeners: Set<(achievement: Achievement) => void> = new Set();
+    
+    public addAchievementListener(listener: (achievement: Achievement) => void) {
+        this.achievementListeners.add(listener);
+    }
+    
+    public removeAchievementListener(listener: (achievement: Achievement) => void) {
+        this.achievementListeners.delete(listener);
+    }
 
     constructor() {
         this.audio = new AudioSystem();
@@ -60,16 +70,17 @@ export class Game {
         }
 
         // Check Achievements
+        // Check Achievements
         this.achievements.forEach(ach => {
             if (ach.check(this)) {
-                if (this.onAchievementUnlock) this.onAchievementUnlock(ach);
+                this.achievementListeners.forEach(listener => listener(ach));
             }
         });
     }
 
     public click() {
         this.addTomo(1);
-        this.audio.playRandom();
+        this.audio.play();
     }
 
     public addTomo(amount: number) {
@@ -82,6 +93,23 @@ export class Game {
 
     public getProductionPerSecond(): number {
         return this.buildings.reduce((sum, b) => sum + b.totalProduction, 0);
+    }
+    
+    // --- Audio Control ---
+    public setAudioMode(mode: 'random' | 'fixed', filename?: string) {
+        this.audio.setMode(mode, filename);
+    }
+    
+    public getAudioFilenames(): string[] {
+        return this.audio.filenames;
+    }
+
+    public setVolume(volume: number) {
+        this.audio.setVolume(volume);
+    }
+
+    public getVolume(): number {
+        return this.audio.getVolume();
     }
 
     public buyBuilding(buildingId: string): boolean {
