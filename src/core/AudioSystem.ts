@@ -7,37 +7,50 @@ export class AudioSystem {
     private fixedFilename: string | null = null;
     private volume: number = 0.5; // Default volume 50%
 
-    // Load all audio files from assets
-    // The key is the file path, value is the public URL
-    private audioModules = import.meta.glob('../assets/audio/*.wav', { eager: true, import: 'default' }) as Record<string, string>;
-
-    public readonly filenames: string[] = [];
+    public readonly filenames = [
+        "D班2回生の.wav",
+        "D班2回生差分.wav",
+        "original.wav",
+        "tomo_tomo_collection4.wav",
+        "あ〜.wav",
+        "ありがとうございました.wav",
+        "えっ.wav",
+        "お疲れ様です.wav",
+        "お疲れ様です2.wav",
+        "お願いします.wav",
+        "かにしゃぶ.wav",
+        "ではどうぞ.wav",
+        "とりあえず.wav",
+        "なんだっけ.wav",
+        "はい！.wav",
+        "やばいっす.wav",
+        "やりますかぁ.wav",
+        "よし.wav",
+        "今私は何を.wav",
+        "何をしているんですか.wav",
+        "嘘の情報を.wav",
+        "笑.wav",
+        "録音できました.wav"
+    ];
 
     constructor() {
         this.initPool();
     }
 
     private initPool() {
-        for (const path in this.audioModules) {
-            // Extract filename from path (e.g., "../assets/audio/foo.wav" -> "foo.wav")
-            const filename = path.split('/').pop() || "";
-            if (!filename) continue;
-
-            this.filenames.push(filename);
-
-            const src = this.audioModules[path];
+        this.filenames.forEach(filename => {
             const audio = new Audio();
             audio.preload = 'auto';
-            audio.src = src;
+            // Encode filename for URL
+            // Base URL (e.g., /tomo/) + audio/ + filename
+            audio.src = `${import.meta.env.BASE_URL}audio/${encodeURIComponent(filename)}`;
             audio.volume = this.volume;
             
             // Debug loading
-            audio.onerror = (e) => console.error(`Failed to load audio: ${filename} (${src})`, e);
+            audio.onerror = (e) => console.error(`Failed to load audio: ${filename} (src: ${audio.src})`, e);
             
             this.pool.set(filename, audio);
-        }
-        // Sort filenames for consistency in UI
-        this.filenames.sort();
+        });
     }
 
     public setMode(mode: 'random' | 'fixed', filename?: string) {
