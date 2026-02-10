@@ -7,49 +7,37 @@ export class AudioSystem {
     private fixedFilename: string | null = null;
     private volume: number = 0.5; // Default volume 50%
 
-    public readonly filenames = [
-        "D班2回生の.wav",
-        "D班2回生差分.wav",
-        "original.wav",
-        "tomo_tomo_collection4.wav",
-        "あ〜.wav",
-        "ありがとうございました.wav",
-        "えっ.wav",
-        "お疲れ様です.wav",
-        "お疲れ様です2.wav",
-        "お願いします.wav",
-        "かにしゃぶ.wav",
-        "ではどうぞ.wav",
-        "とりあえず.wav",
-        "なんだっけ.wav",
-        "はい！.wav",
-        "やばいっす.wav",
-        "やりますかぁ.wav",
-        "よし.wav",
-        "今私は何を.wav",
-        "何をしているんですか.wav",
-        "嘘の情報を.wav",
-        "笑.wav",
-        "録音できました.wav"
-    ];
+    // Load all audio files from assets
+    // The key is the file path, value is the public URL
+    private audioModules = import.meta.glob('../assets/audio/*.wav', { eager: true, import: 'default' }) as Record<string, string>;
+
+    public readonly filenames: string[] = [];
 
     constructor() {
         this.initPool();
     }
 
     private initPool() {
-        this.filenames.forEach(filename => {
+        for (const path in this.audioModules) {
+            // Extract filename from path (e.g., "../assets/audio/foo.wav" -> "foo.wav")
+            const filename = path.split('/').pop() || "";
+            if (!filename) continue;
+
+            this.filenames.push(filename);
+
+            const src = this.audioModules[path];
             const audio = new Audio();
             audio.preload = 'auto';
-            // Encode filename for URL
-            audio.src = `${import.meta.env.BASE_URL}audio/${encodeURIComponent(filename)}`;
+            audio.src = src;
             audio.volume = this.volume;
             
             // Debug loading
-            audio.onerror = (e) => console.error(`Failed to load audio: ${filename}`, e);
+            audio.onerror = (e) => console.error(`Failed to load audio: ${filename} (${src})`, e);
             
             this.pool.set(filename, audio);
-        });
+        }
+        // Sort filenames for consistency in UI
+        this.filenames.sort();
     }
 
     public setMode(mode: 'random' | 'fixed', filename?: string) {
@@ -88,16 +76,16 @@ export class AudioSystem {
 
         if (!audio || this.mode === 'random') {
              // Random logic
-             const keys = Array.from(this.pool.keys());
-             if (keys.length <= 1) {
+             if (this.filenames.length <= 1) {
                  idx = 0;
              } else {
                  do {
-                     idx = Math.floor(Math.random() * keys.length);
-                 } while (idx === this.lastPlayedIndex);
+                     idx = Math.floor(Math.random() * this.filenames.length);
+                 } while (idx === this.lastPlayedIndex && this.filenames.length > 1);
              }
              this.lastPlayedIndex = idx;
-             audio = this.pool.get(keys[idx]);
+             const key = this.filenames[idx];
+             audio = this.pool.get(key);
         }
 
         if (!audio) return;
@@ -111,6 +99,10 @@ export class AudioSystem {
         // Play new
         this.currentAudio = audio;
         audio.currentTime = 0;
+        
+        // Ensure volume is set (in case it was changed globally)
+        audio.volume = this.volume;
+
         audio.play().catch(e => console.warn('Audio play failed', e));
 
         audio.onended = () => {
