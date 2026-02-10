@@ -1,5 +1,6 @@
 import React from 'react';
 import { Building } from '../core/Entity';
+import characterImg from '../assets/image.png';
 
 interface Props {
     building: Building;
@@ -23,7 +24,7 @@ export const BuildingItem: React.FC<Props> = ({ building, canBuy, onBuy }) => {
                 <div className="font-bold text-base">{building.data.name}</div>
                 <div className={`font-mono text-sm flex items-center gap-1.5 ${canBuy ? 'text-success' : 'text-warning'}`}>
                     <div className="bg-white/90 rounded p-0.5 shadow-sm">
-                        <img src={import.meta.env.BASE_URL + 'image/image.png'} alt="tomo" className="w-3.5 h-3.5 object-contain" />
+                        <img src={characterImg} alt="tomo" className="w-3.5 h-3.5 object-contain" />
                     </div>
                     {building.currentCost.toLocaleString()}
                 </div>

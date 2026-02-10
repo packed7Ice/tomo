@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import characterImg from '../assets/image.png';
 
 interface Props {
     tomo: number;
@@ -48,7 +49,7 @@ export const BackgroundCharacters: React.FC<Props> = ({ tomo }) => {
                     
                     {/* Character Image */}
                     <img 
-                        src={import.meta.env.BASE_URL + 'image/image.png'}
+                        src={characterImg}
                         alt="" 
                         className="relative w-12 h-12 object-contain z-10"
                     />

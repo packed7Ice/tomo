@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useGame } from '../hooks/useGame';
 import { BackgroundCharacters } from './BackgroundCharacters';
+import characterImg from '../assets/image.png';
 
 export const ClickerPane: React.FC = () => {
     const { tomo, production, click } = useGame();
@@ -47,7 +48,7 @@ export const ClickerPane: React.FC = () => {
         
         // Create image
         const img = document.createElement('img');
-        img.src = import.meta.env.BASE_URL + 'image/image.png';
+        img.src = characterImg;
         img.style.width = '30px';
         img.style.height = '30px';
         img.style.objectFit = 'contain';
@@ -141,7 +142,7 @@ export const ClickerPane: React.FC = () => {
                     <div className="pulse-ring absolute -inset-2 rounded-[20px] border-2 border-accent-3 opacity-0 pointer-events-none" />
                     
                     <img 
-                        src={import.meta.env.BASE_URL + 'image/image.png'}
+                        src={characterImg}
                         alt="Character" 
                         className="w-full h-full object-contain rounded-2xl drop-shadow-[0_0_15px_rgba(108,92,231,0.4)] pointer-events-none"
                         draggable={false}
