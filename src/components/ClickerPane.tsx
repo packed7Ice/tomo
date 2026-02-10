@@ -47,7 +47,7 @@ export const ClickerPane: React.FC = () => {
         
         // Create image
         const img = document.createElement('img');
-        img.src = '/image/image.png';
+        img.src = 'image/image.png';
         img.style.width = '30px';
         img.style.height = '30px';
         img.style.objectFit = 'contain';
@@ -69,7 +69,7 @@ export const ClickerPane: React.FC = () => {
         particle.addEventListener('animationend', () => particle.remove());
     };
 
-    const handleClick = (e: React.MouseEvent | React.KeyboardEvent) => {
+    const handleClick = () => {
         // e.preventDefault(); // Sometimes prevents focus
         click();
         spawnEmoji();
@@ -100,7 +100,7 @@ export const ClickerPane: React.FC = () => {
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            handleClick(e);
+            handleClick();
         }
     };
 
@@ -141,7 +141,7 @@ export const ClickerPane: React.FC = () => {
                     <div className="pulse-ring absolute -inset-2 rounded-[20px] border-2 border-accent-3 opacity-0 pointer-events-none" />
                     
                     <img 
-                        src="/image/image.png" 
+                        src="image/image.png" 
                         alt="Character" 
                         className="w-full h-full object-contain rounded-2xl drop-shadow-[0_0_15px_rgba(108,92,231,0.4)] pointer-events-none"
                         draggable={false}

@@ -48,7 +48,7 @@ export const BackgroundCharacters: React.FC<Props> = ({ tomo }) => {
                     
                     {/* Character Image */}
                     <img 
-                        src="/image/image.png" 
+                        src="image/image.png" 
                         alt="" 
                         className="relative w-12 h-12 object-contain z-10"
                     />
