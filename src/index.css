@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-main bg-bg-primary text-text-primary h-screen overflow-hidden;
+  }
+}
+
+@layer components {
+  .btn-reset {
+    @apply bg-transparent border border-red-400/50 text-red-400/80 px-2 py-1 text-xs rounded transition-all hover:bg-red-500/10 hover:text-red-400 cursor-pointer;
+  }
+  
+  .pane-scroll {
+    @apply overflow-y-auto scrollbar-thin scrollbar-track-white/5 scrollbar-thumb-white/10;
+  }
+}
+
+/* Custom scrollbar utility not in standard tailwind */
+.scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+}
+.scrollbar-track-white\/5::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+}
+.scrollbar-thumb-white\/10::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 3px;
+}
+
+/* Emoji Burst Animation (Dynamic values need css var support which tailwind has but complex animation is easier here) */
+.emoji-burst {
+    @apply absolute text-3xl pointer-events-none z-20;
+    animation: emojiFly 0.8s ease-out forwards;
+}
+
+@keyframes emojiFly {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(1.5) rotate(var(--rot));
+    }
+}
+
+.particle {
+    @apply absolute rounded-full opacity-0 pointer-events-none;
+    animation: floatParticle 8s infinite ease-in-out;
+}

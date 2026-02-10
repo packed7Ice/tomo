@@ -1,0 +1,9 @@
+/とものもと/
+/image/
+/audio/
+*.wav
+copy_audio.ps1
+copy_audio.py
+/node_modules/
+/dist/
+/public/
